@@ -1,0 +1,9 @@
+.DS_Store
+.idea
+
+
+# Log files should be ignored.
+/log/*
+!/log/README.md
+/uploads/wc-logs/*.log
+

@@ -38,3 +38,45 @@ remove_filter('woocommerce_stock_amount', 'intval');
 
 // Add a filter, that validates the quantity to be a float
 add_filter('woocommerce_stock_amount', 'floatval');
+
+
+// remove post form endpoints so noone can change these details
+function remove_form_post_endpoint() {
+	remove_action('template_redirect',  array( 'WC_Form_Handler', 'save_account_details' ));
+	remove_action('template_redirect',  array( 'WC_Form_Handler', 'save_account' ));
+}
+add_action('init', 'remove_form_post_endpoint');
+
+function add_shipping_details($user_id) {
+	$meta = get_user_meta($user_id);
+	$country = $meta['shipping_country'][0] ?? 'EE';
+	return array(
+		'address' => $meta['shipping_address_1'][0] ?? '',
+		'country' => WC()->countries->countries[ $country ],
+		'city' => $meta['shipping_city'][0] ?? '',
+		'state' => $meta['shipping_state'][0] ?? '',
+		'postcode' => $meta['shipping_postcode'][0] ?? ''
+	);
+}
+add_filter('woocommerce_edit_account_shipping_details', 'add_shipping_details');
+
+function remove_account_detail_links($menu_links) {
+	unset($menu_links['dashboard']);
+
+	return $menu_links;
+}
+add_filter ( 'woocommerce_account_menu_items', 'remove_account_detail_links' );
+
+function WOO_login_redirect( $redirect, $user ) {
+
+    $redirect_page_id = url_to_postid( $redirect );
+    $checkout_page_id = wc_get_page_id( 'checkout' );
+
+    if ($redirect_page_id == $checkout_page_id) {
+        return $redirect;
+    }
+
+    return get_permalink(get_option('woocommerce_myaccount_page_id')) . 'orders/';
+
+}
+add_action('woocommerce_login_redirect', 'WOO_login_redirect', 10, 2);
