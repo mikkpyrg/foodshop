@@ -33,14 +33,19 @@ do_action( 'woocommerce_before_edit_account_form' ); ?>
 	</p>
 	<div class="clear"></div>
 
-	<p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+	<p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-first">
 		<?php esc_html_e( 'Email address', 'woocommerce' );
 			echo ':<br>'.esc_attr( $user->user_email ); ?>
 	</p>
-	<div class="clear"></div>
 	<?php
 		$shipping = apply_filters('woocommerce_edit_account_shipping_details', $user->ID);
 	 ?>
+	<p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-last">
+		<?php esc_html_e( 'Phone', 'woocommerce' );
+			echo ':<br>'.esc_attr( $shipping['phone'] ); ?>
+	</p>
+	<div class="clear"></div>
+
 	<h3><?php esc_html_e( 'Shipping Address', 'woocommerce' );?></h3>
  	<p class="woocommerce-form-row woocommerce-form-row--first form-row form-row-first">
 		<?php esc_html_e( 'Country', 'woocommerce' );
